@@ -2,14 +2,16 @@ const puppeteer = require('puppeteer');
 const Xvfb      = require('xvfb');
 var xvfb        = new Xvfb({silent: true});
 var width       = 1280;
-var height      = 720;
+var height      = 720 + 80 + 50 // plus the height of tab and warning messages;
 var options     = {
   headless: false,
+  executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+  ignoreDefaultArgs: ['--enable-automation'],
   args: [
     '--enable-usermedia-screen-capturing',
     '--allow-http-screen-capture',
     '--auto-select-desktop-capture-source=puppetcam',
-    '--load-extension=' + __dirname,,
+    '--load-extension=' + __dirname,
     '--disable-extensions-except=' + __dirname,
     '--disable-infobars',
     `--window-size=${width},${height}`,
@@ -18,7 +20,8 @@ var options     = {
 
 async function main() {
     xvfb.startSync()
-    var url = process.argv[2], exportname = process.argv[3]
+    let url = process.argv[2], exportname = process.argv[3]
+    const waitTime = process.argv[4] || 5000;
     if(!url){ url = 'http://tobiasahlin.com/spinkit/' }
     if(!exportname){ exportname = 'spinner.webm' }
     const browser = await puppeteer.launch(options)
@@ -29,7 +32,7 @@ async function main() {
     await page.setBypassCSP(true)
 
     // Perform any actions that have to be captured in the exported video
-    await page.waitFor(8000)
+    await page.waitFor(waitTime);
 
     await page.evaluate(filename=>{
         window.postMessage({type: 'SET_EXPORT_PATH', filename: filename}, '*')

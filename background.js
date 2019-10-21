@@ -11,7 +11,7 @@ chrome.runtime.onConnect.addListener(port => {
         filename = msg.filename
         break
       case 'REC_STOP':
-        recorder.stop()    
+        recorder.stop()
         break
       case 'REC_CLIENT_PLAY':
         if(recorder){
@@ -27,10 +27,10 @@ chrome.runtime.onConnect.addListener(port => {
               mandatory: {
                 chromeMediaSource: 'desktop',
                 chromeMediaSourceId: streamId,
-                minWidth: 1280,
-                maxWidth: 1280,
-                minHeight: 720,
-                maxHeight: 720,
+                minWidth: 1280 * 2,
+                maxWidth: 1280 * 2,
+                minHeight: 720 * 2,
+                maxHeight: 720 * 2,
                 minFrameRate: 60,
               }
             }
